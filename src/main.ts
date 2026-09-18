@@ -6,10 +6,12 @@ app.setPath('userData', path.join(app.getPath('appData'), 'Deskling-2A'));
 
 let creature: BrowserWindow | undefined;
 let tray: Tray | undefined;
+let stopIconTest: (() => void) | undefined;
 const smokeTest = process.argv.includes('--smoke-test');
+const iconTest = process.argv.includes('--icon-test');
 
 if (process.platform !== 'darwin') {
-  console.error('Deskling steg 2A kräver macOS.');
+  console.error('Deskling kräver macOS.');
   app.exit(1);
 } else if (!app.requestSingleInstanceLock()) {
   if (smokeTest) console.error('Avsluta den körande Deskling-instansen före smoke-testet.');
@@ -65,6 +67,10 @@ if (process.platform !== 'darwin') {
     creature.webContents.on('render-process-gone', () => app.exit(1));
     await creature.loadFile(path.join(app.getAppPath(), 'src', 'creature.html'));
     creature.showInactive();
+    if (iconTest && !smokeTest) {
+      const { installIconTest } = await import('./icon-test.js');
+      stopIconTest = installIconTest(tray, creature);
+    }
     if (smokeTest) {
       const { runSmokeTest } = await import('./smoke.js');
       await runSmokeTest(creature, tray);
@@ -77,6 +83,7 @@ if (process.platform !== 'darwin') {
 }
 
 app.on('window-all-closed', () => app.quit());
+app.on('before-quit', () => stopIconTest?.());
 app.on('will-quit', () => tray?.destroy());
 process.on('SIGINT', () => app.quit());
 process.on('SIGTERM', () => app.quit());

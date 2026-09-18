@@ -16,7 +16,7 @@
    hindrar integration.
 6. Avsluta med ändrade filer, utförda kontroller, antaganden, öppna frågor,
    git-status och rekommenderad nästa uppgift. Commit och push kräver mandat
-   i uppgiften; steg 2A har uttryckligt mandat för granskad commit och push.
+   i uppgiften; steg 2B har uttryckligt mandat för granskad commit och push.
 
 ## Uppgiftsmall
 

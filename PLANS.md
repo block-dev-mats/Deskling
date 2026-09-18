@@ -1,16 +1,20 @@
 # Stegvis plan
 
 Varje steg får en egen avgränsad uppgift enligt [WORKFLOW.md](WORKFLOW.md).
-Steg 1 är levererat. Steg 2A är implementerat med verifieringsläge i
-[TESTING.md](TESTING.md). Övriga steg återstår.
+Steg 1 och 2A är levererade. Steg 2B är ett körbart ikontest med blockerad
+positionsverifiering; se [TESTING.md](TESTING.md). Övriga steg återstår.
 
 1. **Repo-grund.** Skapa de åtta dokumentations- och konfigurationsfilerna.
    Kontrollera omfattning, hänvisningar och ignore-regler. Ingen implementation.
 2. **Teknisk macOS-verifiering.** 2A prövar en verklig transparent skrivbordsfigur,
    klickgenomsläpp, fokus/fönsterordning, vila/rörelse och avslutning utan filåtkomst.
    Manuell kontroll av detta fönster på verkligt Desktop ingår i 2A.
-   **Nästa steg 2B** undersöker separat verkliga Finder-ikonpositioner och nödvändiga
-   macOS-behörigheter. Dokumentera hinder och arkitekturbeslut innan fortsatt bygge.
+   **2B** undersöker separat Finders `position` för två eller tre exakt
+   valda syntetiska objekt, via appens uttryckliga behörighets- och uppdateringsflöde.
+   Ingen inventering, innehållsläsning eller Desktop-skrivning. Avgör tillförlitlighet
+   och kvarvarande begränsningar innan fortsatt bygge. Den prövade vägen gav
+   ingen individuell position för synliga ikoner. Nästa beslut är om en separat,
+   liten read-only Accessibility-verifiering ska tillåtas; ingen sådan kod ingår här.
 3. **Read-only filobservation och förhandsvisning.** Lista stödda lösa filer på
    översta nivån i en isolerad testrot. Ta fram lokala regelförslag och en exakt
    plan med källor, destinationer och nya mappar. Visa undantag och konflikter.
@@ -39,5 +43,5 @@ Steg 1 är levererat. Steg 2A är implementerat med verifieringsläge i
 - Vilka macOS-behörigheter, distributionsval och eventuella sandboxkrav behövs?
 - Vilken Nebius/NVIDIA-tjänst och exakt modell passar, och vilka tävlingskrav gäller?
 
-2A ger begränsad evidens för fönsterbeteendet, inte svar på ikonpositioner,
-framtida behörigheter, modellval eller tävlingskrav.
+2A ger evidens för fönsterbeteendet. 2B är ingen garanti för ikonpositioner i alla
+Finder-lägen. Framtida filbehörigheter, modellval och tävlingskrav återstår.

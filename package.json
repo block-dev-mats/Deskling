@@ -8,7 +8,10 @@
     "build": "tsc",
     "check": "tsc --noEmit",
     "start": "npm run build && electron .",
-    "smoke": "npm run build && electron . --smoke-test"
+    "smoke": "npm run build && electron . --smoke-test",
+    "icons": "npm run build && electron . --icon-test",
+    "prepare:icons": "node scripts/prepare-icons.cjs",
+    "test": "npm run build && node --test dist/icon-probe.test.js"
   },
   "engines": {
     "node": ">=22.12.0"

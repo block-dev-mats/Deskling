@@ -1,5 +1,55 @@
 # Verifiering
 
+## Steg 2B: avgränsad verifiering
+
+`npm test` kör sex fokuserade tester med syntetiska svar och mockad processstart:
+urvalsgräns, ID/koordinater, uppdatering/saknat objekt, nekad åtkomst/timeout,
+ogiltiga/sammanfallande/utanförliggande positioner och sanering av processfel.
+De passerar utan Finder-frågor eller Desktop-åtkomst. TypeScript, renderer-JS och
+AppleScript-kompilering passerar. Kompilering är inte körning mot Finder.
+
+Förberedelseskriptet kontrollerades separat i en isolerad temporär katalog:
+nygenerering fungerar, befintlig fil och symlänk nekas utan läsning eller ersättning.
+Oberoende read-only review av åtkomstgränsen identifierade EEXIST-hanteringen;
+den är rättad och återgranskad utan kvarvarande kodblockerare. Verkliga Finder-svar
+eller skrivbordsbilder ingår aldrig i review.
+
+**Faktiskt macOS-resultat 2026-09-18: blockerad positionsverifiering.**
+På samma macOS 26.6.2/arm64/Electron 44.4.2 som 2A kördes `npm run icons`:
+
+- Användaren placerade syntetiska A/B/C på skrivbordet och bekräftade individuellt
+  synliga ikoner. Först prövades `desktop position`, därefter `position` på samma
+  exakt valda objekt. Båda gav status **Finder gav ingen individuell ikonposition**.
+  Inga markörer ritades. Initialt klassades detta som utanför skärmen; statusen
+  för saknad individuell position förtydligades innan slutkontrollen.
+- Efter separat uttryckligt tillstånd använde agenten Computer för skrivbordsvisning
+  och endast syntetiska testobjektsflyttar. Computer bekräftade ikonerna och körde
+  läsningen via Deskling-menyn och dess bekräftelsedialog, med samma felstatus.
+  Ingen ny Automation-dialog visades under denna körning; attribution och flöde
+  med helt färsk/nekad systembehörighet är inte verifierade.
+- Computer-försöket att dra A direkt på Desktop stoppades av verktygets
+  `noWindowsAvailable`. Ingen ikonförflyttning kunde verifieras på det sättet.
+- B flyttades via Finder till en separat ignorerad testmapp. Uppdatering i Deskling
+  gav **B: saknas**, utan markör. B återställdes via Finder till Desktop. Inga andra
+  objekt flyttades och inga visningsinställningar ändrades.
+- Varelsen fanns kvar efter felen. **Avsluta Deskling** via appmenyn avslutade
+  körningen med kod 0. Inga råsvar, privata namn eller bilder har sparats i projektet
+  eller skickats till den oberoende granskaren.
+- Efter 2B-ändringarna passerade även `npm run smoke` för normal 2A-start:
+  transparenta pixlar, icke fokuserbart fönster, rörelse/vila och automatisk avslutning.
+
+**Kvarstår:** rätt markör vid rätt ikon, följning efter ikonflytt, rensning av en
+tidigare verklig markör samt klickgenomsläpp/fokus med synliga testmarkörer.
+Nekad åtkomst och timeout är bara simulerade. Återställ inte systembehörigheter
+för tester. Travar, dolda ikoner, andra skärmar, Stage Manager och fullskärm är
+inte stödda. Detta är inte ett godkänt resultat för tillförlitlig ikonlokalisering.
+
+**Reproduktion:** förbered och placera de syntetiska objekten enligt README,
+starta `npm run icons`, välj A+B och bekräfta läsningen. Statusen ovan är det
+observerade utfallet; inga hårdkodade eller ersättande koordinater används.
+Minsta nästa beslut: tillåt eller avstå från ett separat, avgränsat read-only
+test av macOS Accessibility. Ingen alternativ integration har byggts i 2B.
+
 ## Steg 2A: kontroller och observerat resultat
 
 Kör `npm run check` för TypeScript och `node --check src/creature.js` för renderer-JS.
@@ -46,8 +96,10 @@ blockerare; ett överflödigt CSS-tecken rättades och återkontrollerades.
 
 Använd bara syntetiska filer i isolerade testkataloger, exempelvis under
 `.deskling-local/`. Ingen automatisk filtestning mot användarens riktiga Desktop.
-2A tillåter observation och manuell interaktion med skrivbordsfönstret, aldrig
-läsning eller ändring av Desktop-filer. Framtida filtester kräver separat scope.
+2A tillåter observation och manuell interaktion med skrivbordsfönstret. 2B tillåter
+endast uttryckligt vald positionsmetadata för fasta syntetiska testobjekt via appen.
+Ingen automatisk läsning, flytt eller städning på Desktop. Framtida filtester kräver
+separat scope och verkliga privata metadata får inte hamna i testunderlag.
 
 - Observation och preview: inga filsystemändringar, även vid fel; befintliga
   mappar, dolda filer, apppaket och övriga ej stödda objekt undantas.

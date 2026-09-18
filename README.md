@@ -19,8 +19,9 @@ ligger på skrivbordsnivån, släpper igenom musinput och kan inte få tangentbo
 Figuren rör sig mjukt i 1,2 sekunder och vilar sedan i 12 sekunder. Rörelsen
 pausas när renderern är dold eller macOS-inställningen för minskad rörelse gäller.
 
-Ingen läsning av Desktop-filer, ikonpositionshämtning, filverkställighet eller AI
-finns. Ingen ny filåtkomst- eller datorstyrningsbehörighet begärs. Ingen CI finns.
+Normal start läser inga Desktop-objekt och utlöser inga Finder-behörighetsdialoger.
+Det separata experimentet 2B nedan kan läsa ikonpositioner för valda syntetiska
+testobjekt. Ingen filverkställighet, innehållsläsning eller AI finns. Ingen CI finns.
 
 ## Starta och avsluta
 
@@ -37,6 +38,43 @@ Avsluta via **Deskling → Avsluta Deskling** i macOS-menyraden högst upp på
 skärmen, på sidan där klockan finns. **Ctrl+C** i
 startterminalen är en reservväg för att stoppa hela körningen.
 
+## Ikontest 2B
+
+**Status: positionsverifieringen är blockerad på den testade Macen.** Finder gav
+ingen individuell position för synliga testikoner. Experimentet är körbart och
+visar felstatus säkert, men rätt markörposition och följning efter ikonflytt är
+inte verifierade. Se [TESTING.md](TESTING.md) för reproduktion och nästa beslut.
+
+Förbered syntetiska filer med `npm run prepare:icons`. De skapas enbart i
+`.deskling-local/icon-tests/`; befintliga mål nekas utan läsning eller ersättning.
+Förberedelsen behövs bara en gång per arbetskatalog. Kopiera själv två eller tre av
+`Deskling-2B-test-A.txt`, `Deskling-2B-test-B.txt`, `Deskling-2B-test-C.txt` till
+skrivbordet. Använd inga verkliga filer med dessa namn. Appen kopierar eller städar
+aldrig på Desktop.
+
+Avsluta en tidigare instans och kör `npm run icons`. I Deskling-menyn:
+
+1. Kryssa i två eller tre testobjekt. Inget läses när de kryssas i.
+2. Välj **Läs / uppdatera valda testikoner…**, läs förklaringen och bekräfta.
+   macOS kan begära **Automation → Finder** för Electron eller startprogrammet.
+   Ingen Full diskåtkomst, skärminspelning eller Hjälpmedel ska behövas.
+3. Jämför bokstavsmarkörerna med rätt ikoner. Flytta själv en testikon och uppdatera
+   igen. Menyn visar status för varje valt test-ID; koordinater och råsvar loggas inte.
+
+Varje läsning rensar gamla markörer först. Saknad/nekad/okänd position eller
+uteblivet svar ger ingen markör. En läsning tar högst tio sekunder; om en första
+behörighetsdialog tar längre tid, gör en ny uttrycklig uppdatering efter ditt beslut.
+**Rensa markörer / avbryt läsning** stoppar testet, och **Avsluta Deskling** stoppar
+hela appen. Samma teståtgärder finns i appens vanliga meny (kan heta Electron i
+utvecklingskörningen), med endast test-ID/status i varelsens tillgänglighetsbeskrivning.
+En normal omstart återgår till 2A. Ingen behörighet återställs automatiskt.
+
+Markörer är ögonblicksbilder och följer inte ikonflyttar förrän du uppdaterar.
+Skärmändringar rensar dem. Testa bara individuellt synliga ikoner på primärskärmen,
+utan travar, dolda ikoner, Stage Manager eller fullskärm. Dessa lägen upptäcks inte
+tillförlitligt och är inte stödda. Finder kan lämna lagrade positioner som inte
+motsvarar en synlig ikon; den visuella jämförelsen är därför en del av experimentet.
+
 ## Begränsningar och nästa steg
 
 Detta är en utvecklingskörning, inte en signerad eller paketerad app. Electron kan
@@ -46,8 +84,8 @@ macOS placerar menyobjektet; en trång menyrad kan göra det svårare att hitta.
 
 Electron + TypeScript används för experimentet med vanlig HTML/CSS och en liten
 lokal animation, utan React eller animationsmotor. Detta avgör inte hela produktens
-arkitektur. Nästa avgränsade steg 2B undersöker verkliga Finder-ikonpositioner och
-vilka behörigheter det skulle kräva. Se [TESTING.md](TESTING.md) för faktisk evidens.
+arkitektur. Steg 2B prövar Finders `position`; resultatet och nästa beslut
+står i [TESTING.md](TESTING.md). Någon allmän filobservatör har inte införts.
 
 ## Läsordning
 

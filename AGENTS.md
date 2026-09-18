@@ -9,8 +9,11 @@
   av säkerhetskritisk kod före integration.
 - Följ säkerhetsgränserna i [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) och
   testreglerna i [TESTING.md](TESTING.md). Läs [PLANS.md](PLANS.md) inför nästa steg.
-- Aktuellt steg 2A är ett avgränsat macOS-fönsterexperiment. Ingen observation
-  av användarfiler, Finder-integration, AI eller filverkställighet ingår.
+- Aktuellt steg 2B tillåter enbart läsande Finder-frågor om uttryckligen valda,
+  namngivna syntetiska testobjekt efter användarhandling i separat testläge.
+  Ingen inventering, filinnehållsläsning, AI eller filverkställighet ingår.
+  Skriv aldrig på verkligt Desktop. Privata namn/sökvägar, råa Finder-svar och
+  skrivbordsbilder får inte nå loggar, agentkontext, review, fixtures eller Git.
   Utöka inte scope utan en ny uppgift. Commit och push följer uppgiftens mandat.
 
 ## Webbläsare

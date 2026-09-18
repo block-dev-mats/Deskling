@@ -10,7 +10,7 @@ Ett 180 × 180-fönster på primärskärmen använder Electrons
 [`type: 'desktop'`](https://www.electronjs.org/docs/latest/api/base-window#new-basewindowoptions),
 transparent bakgrund, `focusable: false`, `showInactive()` och
 `setIgnoreMouseEvents(true)`. Inget always-on-top används. En separat tray-meny
-avslutar appen. Ingen ikonpositions- eller filintegration finns.
+avslutar appen. Normal start har ingen ikonpositions- eller filintegration.
 
 Renderern har sandbox, context isolation och ingen Node-integration eller preload.
 Inga IPC-anrop exponeras. CSP blockerar nätanslutningar; navigation, nya fönster
@@ -20,6 +20,33 @@ Electrons egen profil/cache ligger i macOS Application Support under `Deskling-2
 utanför repot. Det är runtime-data, ingen läsning av användarens skrivbordsfiler.
 
 Se [TESTING.md](../TESTING.md) för observerat beteende och kvarvarande kontroller.
+
+## Begränsat läsexperiment 2B
+
+Endast `--icon-test` installerar testmenyn. Två eller tre uttryckligen valda ID:n
+A/B/C mappas till fasta syntetiska filnamn. Efter en förklarande bekräftelsedialog
+startar main-processen `/usr/bin/osascript` med ett fast lässkript och separata
+argument, utan shell. Finder tillfrågas endast om `position` för respektive
+exakt `document file` på Desktop. Inga objekt listas och inga innehåll läses.
+
+Skriptet returnerar endast test-ID, begränsad status och numeriska positioner.
+Main-processen validerar format, identitet och primärskärmens gränser; fel,
+okända svar och sammanfallande punkter ger inga markörer. Stderr, feltexter och
+råsvar förs aldrig till logg, renderer eller agent. Positioner finns bara i minnet.
+Ett litet icke fokuserbart skrivbordsfönster per giltig position visar ID-markören.
+Ingen offsetkalibrering eller gissad position används.
+
+Läsningen är manuell, avbrytbar och begränsad till tio sekunder. Gamla markörer
+rensas före uppdatering, vid urval/skärmändring och vid avslut. Generationskontroll
+hindrar sena svar från att återställa dem. Varelsen och avslutningsmenyn fungerar
+oberoende av Finder-fel. Behörigheter ges av användaren; appen ändrar ingen
+systembehörighet. Travar och andra lägen som döljer enskilda ikoner är inte stödda
+och kan inte automatiskt fastställas med denna smala fråga.
+
+Denna väg är inte verifierad för faktisk lokalisering: både den först prövade
+`desktop position` och `position` gav ingen individuell ikonposition i appflödet.
+Ingen fallback eller koordinatgissning införs. Den vanliga appmenyn speglar
+testmenyn och rendererns tillgänglighetstext visar bara fasta test-ID/statusvärden.
 
 ## Ansvar
 
@@ -76,5 +103,5 @@ i repot. Produktjournalens lagringsplats utanför repot återstår att välja.
 
 Ingen skanning eller modellförfrågan per animationsbildruta. Separera observation,
 förslagsgenerering och rendering; mät resursåtgång enligt [TESTING.md](../TESTING.md).
-Exakt Nebius/NVIDIA-modell, tävlingskrav, verkliga Finder-ikonpositioner och
-macOS-behörigheter är öppna verifieringsfrågor.
+Exakt Nebius/NVIDIA-modell, tävlingskrav, bredare tillförlitlighet för
+Finder-ikonpositioner och framtida filbehörigheter är öppna verifieringsfrågor.
