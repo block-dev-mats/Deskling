@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+._*
+.AppleDouble/
+.LSOverride
+
+# Beroenden och genererade bygg-/testresultat
+node_modules/
+/dist/
+/out/
+/release/
+/coverage/
+/test-results/
+/playwright-report/
+*.tsbuildinfo
+
+# Miljöfiler; den dokumenterade exempelkonfigurationen ska vara synlig
+.env
+.env.*
+!.env.example
+
+# Lokal runtime och syntetiska demofiler; aldrig verklig användardata
+/.deskling-local/

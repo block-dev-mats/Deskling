@@ -1,0 +1,43 @@
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  pointer-events: none;
+  user-select: none;
+}
+
+#creature {
+  position: absolute;
+  left: 45px;
+  top: 65px;
+  width: 90px;
+  height: 80px;
+  border-radius: 45% 45% 35% 35%;
+  background: #9ee5c1;
+  box-shadow: inset 0 -7px 0 #77c9a5;
+  transform-origin: 50% 100%;
+}
+
+.eye {
+  position: absolute;
+  top: 27px;
+  width: 7px;
+  height: 10px;
+  border-radius: 50%;
+  background: #213b34;
+}
+
+.left { left: 26px; }
+.right { right: 26px; }
+
+.mouth {
+  position: absolute;
+  top: 44px;
+  left: 39px;
+  width: 12px;
+  height: 5px;
+  border-bottom: 2px solid #213b34;
+  border-radius: 0 0 50% 50%;
+}
